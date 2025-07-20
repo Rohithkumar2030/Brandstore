@@ -11,9 +11,9 @@
 <section class="section-intro padding-y-sm">
 <div class="container">
 
-<div class="intro-banner-wrap">
-	<img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded">
-</div>
+{% comment %} <div class="intro-banner-wrap text-center"> {% endcomment %}
+  {% comment %} <img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded"> {% endcomment %}
+{% comment %} </div> {% endcomment %}
 
 </div> <!-- container //  -->
 </section>
@@ -25,7 +25,11 @@
 
 <header class="section-heading">
 	<a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
-	<h3 class="section-title">Popular products</h3>
+	<h3 class="section-title">Our products</h3>
+	<div class="container">
+  <div class="row">
+    
+
 </header><!-- sect-heading -->
 
 
@@ -36,7 +40,7 @@
 			<a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"> </a>
 			<figcaption class="info-wrap">
 				<a href="{{ product.get_url }}" class="title">{{ product.product_name }}</a>
-				<div class="price mt-1">$ {{ product.price }}</div> <!-- price-wrap.// -->
+				<div class="price mt-1">Rs {{ product.price }}</div> <!-- price-wrap.// -->
 				<div class="rating-star">
 					<span>
 						<i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
@@ -55,9 +59,6 @@
 </div><!-- container // -->
 </section>
 <!-- ========================= SECTION  END// ========================= -->
-
-
-
 
 
 

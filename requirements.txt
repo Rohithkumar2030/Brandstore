@@ -1,22 +1,22 @@
-asgiref==3.2.10
-boto3==1.17.36
-botocore==1.20.36
-certifi==2020.12.5
-chardet==4.0.0
-Django==3.1
-django-admin-honeypot==1.1.0
-django-admin-thumbnails==0.2.5
-django-session-timeout==0.1.0
-django-storages==1.11.1
-idna==2.10
-jmespath==0.10.0
-Pillow==7.2.0
-psycopg2-binary==2.8.6
-python-dateutil==2.8.1
-python-decouple==3.4
-pytz==2020.1
-requests==2.25.1
-s3transfer==0.3.6
-six==1.15.0
-sqlparse==0.3.1
-urllib3==1.26.3
+asgiref>=3.8.1          # 3.8.1+ supports Python 3.13[4][5]
+boto3                   # Use latest (pin it if you have stability needs)[9][10]
+botocore                # Use latest
+certifi                 # Use latest[11]
+chardet                 # Use latest[12]
+Django>=4.2             # 4.2 LTS+ for Python 3.13[4][21]
+django-admin-honeypot   # Use latest (1.1.0 likely incompatible)[14]
+django-admin-thumbnails # Use latest[15]
+django-session-timeout  # Use latest
+django-storages         # Use latest
+idna                    # Use latest
+jmespath                # Use latest
+Pillow>=11.0.0          # 11.0.0+ needed for Python 3.13
+psycopg2-binary         # Use latest
+python-dateutil         # Use latest
+python-decouple         # Use latest
+pytz                    # Use latest
+requests                # Use latest
+s3transfer              # Use latest
+six                     # Use latest
+sqlparse                # Use latest
+urllib3                 # Use latest

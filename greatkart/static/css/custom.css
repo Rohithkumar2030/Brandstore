@@ -59,3 +59,31 @@ ul.thumb li img{
   height: 80px;
   border: 1px solid grey;
 }
+
+/* Your button styles */
+.btn.btn-primary,
+button.btn-primary {
+    background-color: #001B94 !important;
+    border-color: #001B94 !important;
+}
+
+.btn.btn-primary:hover,
+button.btn-primary:hover {
+    background-color: #001a85 !important;
+    border-color: #001a85 !important;
+}
+
+.btn.btn-primary:focus,
+.btn.btn-primary.focus,
+button.btn-primary:focus {
+    background-color: #001a85 !important;
+    border-color: #001a85 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 27, 148, 0.5) !important;
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary.active,
+button.btn-primary:active {
+    background-color: #001a85 !important;
+    border-color: #001a85 !important;
+}
