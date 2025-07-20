@@ -29,7 +29,8 @@ INSTALLED_APPS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
-    "https://brandstore-5kv6.onrender.com"
+    "https://brandstore-5kv6.onrender.com",
+    "http://127.0.0.1:8000"
 ]
 
 # Middleware
