@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from store.models import Product, ReviewRating
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 
 def home(request):
@@ -19,7 +19,8 @@ def home(request):
 
 
 def create_admin(request):
+    User = get_user_model()
     if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword')
+        User.objects.create_superuser(email="hitman@gmail.com",username="hitman",password="hitman",first_name='Admin',last_name='User')
         return HttpResponse("Superuser created")
     return HttpResponse("Superuser already exists")
