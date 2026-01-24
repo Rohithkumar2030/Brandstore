@@ -150,18 +150,32 @@ def activate(request, uidb64, token):
         return redirect('register')
 
 
-@login_required(login_url = 'login')
-def dashboard(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
-    orders_count = orders.count()
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile
+from orders.models import Order # Ensure this import is correct
 
-    userprofile = UserProfile.objects.get(user_id=request.user.id)
+@login_required(login_url='login')
+def dashboard(request):
+    try:
+        # Fetching orders
+        orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+        orders_count = orders.count()
+
+        # Handle UserProfile edge case:
+        # get_or_create ensures the object exists; if it doesn't, it creates a blank one.
+        userprofile, created = UserProfile.objects.get_or_create(user=request.user)
+        
+    except Exception as e:
+        # Fallback in case of severe DB issues
+        userprofile = None
+        orders_count = 0
+
     context = {
         'orders_count': orders_count,
         'userprofile': userprofile,
     }
     return render(request, 'accounts/dashboard.html', context)
-
 
 def forgotPassword(request):
     if request.method == 'POST':

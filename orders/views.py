@@ -9,71 +9,75 @@ from store.models import Product
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
-
 def payments(request):
     body = json.loads(request.body)
-    order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
+    order = Order.objects.get(user=request.user, order_number=body['orderID'])
 
-    # Store transaction details inside Payment model
+    # 1. Store transaction details (We always save the attempt)
     payment = Payment(
         user = request.user,
         payment_id = body['transID'],
         payment_method = body['payment_method'],
         amount_paid = order.order_total,
-        status = body['status'],
+        status = body['status'], # This could be 'COMPLETED' or something else
     )
     payment.save()
 
-    order.payment = payment
-    order.is_ordered = True
-    order.save()
+    # CHANGE STARTS HERE: Wrap everything in a success check
+    if body['status'] == 'COMPLETED':
+        order.payment = payment
+        order.is_ordered = True
+        order.save()
 
-    # Move the cart items to Order Product table
-    cart_items = CartItem.objects.filter(user=request.user)
+        # Move the cart items to Order Product table
+        cart_items = CartItem.objects.filter(user=request.user)
 
-    for item in cart_items:
-        orderproduct = OrderProduct()
-        orderproduct.order_id = order.id
-        orderproduct.payment = payment
-        orderproduct.user_id = request.user.id
-        orderproduct.product_id = item.product_id
-        orderproduct.quantity = item.quantity
-        orderproduct.product_price = item.product.price
-        orderproduct.ordered = True
-        orderproduct.save()
+        for item in cart_items:
+            orderproduct = OrderProduct()
+            orderproduct.order_id = order.id
+            orderproduct.payment = payment
+            orderproduct.user_id = request.user.id
+            orderproduct.product_id = item.product_id
+            orderproduct.quantity = item.quantity
+            orderproduct.product_price = item.product.price
+            orderproduct.ordered = True
+            orderproduct.save()
 
-        cart_item = CartItem.objects.get(id=item.id)
-        product_variation = cart_item.variations.all()
-        orderproduct = OrderProduct.objects.get(id=orderproduct.id)
-        orderproduct.variations.set(product_variation)
-        orderproduct.save()
+            cart_item = CartItem.objects.get(id=item.id)
+            product_variation = cart_item.variations.all()
+            orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+            orderproduct.variations.set(product_variation)
+            orderproduct.save()
 
+            # Reduce the quantity of the sold products
+            product = Product.objects.get(id=item.product_id)
+            product.stock -= item.quantity
+            product.save()
 
-        # Reduce the quantity of the sold products
-        product = Product.objects.get(id=item.product_id)
-        product.stock -= item.quantity
-        product.save()
+        # 2. Clear cart ONLY on success
+        CartItem.objects.filter(user=request.user).delete()
 
-    # Clear cart
-    CartItem.objects.filter(user=request.user).delete()
+        # 3. Send email ONLY on success
+        mail_subject = 'Thank you for your order!'
+        message = render_to_string('orders/order_recieved_email.html', {
+            'user': request.user,
+            'order': order,
+        })
+        to_email = request.user.email
+        send_email = EmailMessage(mail_subject, message, to=[to_email])
+        # send_email.send()
 
-    # Send order recieved email to customer
-    mail_subject = 'Thank you for your order!'
-    message = render_to_string('orders/order_recieved_email.html', {
-        'user': request.user,
-        'order': order,
-    })
-    to_email = request.user.email
-    send_email = EmailMessage(mail_subject, message, to=[to_email])
-    send_email.send()
-
-    # Send order number and transaction id back to sendData method via JsonResponse
-    data = {
-        'order_number': order.order_number,
-        'transID': payment.payment_id,
-    }
-    return JsonResponse(data)
-
+        data = {
+            'order_number': order.order_number,
+            'transID': payment.payment_id,
+        }
+        return JsonResponse(data)
+    
+    else:
+        # CHANGE: If status is NOT 'COMPLETED', return an error response
+        # This prevents the JS .then() from running and keeps the cart full
+        return JsonResponse({'status': 'Failed', 'message': 'Payment was not successful'}, status=400)
+    
 def place_order(request, total=0, quantity=0,):
     current_user = request.user
 
@@ -137,16 +141,17 @@ def place_order(request, total=0, quantity=0,):
 def order_complete(request):
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
-
+    print(order_number)
+    print(transID)
     try:
+        payment = Payment.objects.get(payment_id=transID)
         order = Order.objects.get(order_number=order_number, is_ordered=True)
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
-
         subtotal = 0
         for i in ordered_products:
             subtotal += i.product_price * i.quantity
 
-        payment = Payment.objects.get(payment_id=transID)
+        
 
         context = {
             'order': order,
@@ -159,3 +164,15 @@ def order_complete(request):
         return render(request, 'orders/order_complete.html', context)
     except (Payment.DoesNotExist, Order.DoesNotExist):
         return redirect('home')
+
+def blank_page(request):
+    # Get data from the URL parameters
+    order_number = request.GET.get('order_number')
+    amount = request.GET.get('amount')
+    
+    context = {
+        'order_number': order_number,
+        'amount': amount,
+    }
+    # Make sure 'orders/blank_page.html' exists in your templates folder
+    return render(request, 'orders/blank_page.html', context)

@@ -107,17 +107,12 @@
 						<p class="text-center mb-3">
 							<img src="{% static './images/misc/payments.png' %}" height="26">
 						</p>
+						<button id="custom-pay-button" class="btn btn-primary btn-block"> Pay Rs. {{grand_total}} </button>
 
-
-						<div id="paypal-button-container">
-							<!-- PayPal Button Will Load -->
-						</div>
+						<div id="paypal-button-container" style="display: none;"></div>
 
 					</div> <!-- card-body.// -->
 				</div> <!-- card.// -->
-				<div class="alert alert-danger" role="alert">
-				  <b>Please Note: </b>This is a demo website. Do not try to make real payments.
-				</div>
 			</aside> <!-- col.// -->
 
 
@@ -128,7 +123,7 @@
 	</div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-
+<!--
 <script>
 
 	function getCookie(name) {
@@ -205,5 +200,27 @@
 
 	}).render('#paypal-button-container');
 </script>
+-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Get variables from Django context
+        var amount = "{{ grand_total }}";
+        var orderID = "{{ order.order_number }}";
+        
+        // 2. Identify your custom button
+        var payButton = document.getElementById('custom-pay-button');
 
+        if (payButton) {
+            payButton.addEventListener('click', function() {
+                // 3. Construct URL with query parameters
+                // Using template tags to get the base URL
+                var baseUrl = "{% url 'blank_page' %}";
+                var blankPageUrl = baseUrl + "?order_number=" + orderID + "&amount=" + amount;
+
+                // 4. Perform the redirect
+                window.location.href = blankPageUrl;
+            });
+        }
+    });
+</script>
 {% endblock %}

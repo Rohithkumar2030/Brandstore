@@ -29,7 +29,7 @@ INSTALLED_APPS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
-    "https://brandstore-5kv6.onrender.com",
+    "https://brandstore.iitkgp.ac.in",
     "http://127.0.0.1:8000"
 ]
 
@@ -80,6 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        #'NAME': '/app/db/db.sqlite3', 
+        # Uncomment above line and comment previous line for production server
     }
 }
 
@@ -100,6 +102,10 @@ USE_TZ = True
 
 # ✅ CORRECTED Static files configuration for BOTH root-level AND app-level static folders
 STATIC_URL = '/static/'
+STATIC_ROOT = '/app/staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/app/media'
 
 # This enables Django to find static files in BOTH locations
 STATICFILES_DIRS = [

@@ -1,0 +1,113 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<section class="section-content padding-y bg" style="min-height: 84vh">
+  <div class="container">
+    <div class="row justify-content-center">
+      <aside class="col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-body text-center">
+            <h4 class="card-title mb-4">Complete Your Action</h4>
+
+            <!-- Success Button -->
+            <button
+              type="button"
+              id="confirm-payment-btn"
+              class="btn btn-primary btn-block mb-3"
+            >
+              Payment Successful
+            </button>
+
+            <!-- Failure Button (now with id) -->
+            <a
+              href="{% url 'cart' %}"
+              id="payment-failed-btn"
+              class="btn btn-danger btn-block"
+            >
+              Payment Failed
+            </a>
+
+            <hr />
+            <p class="text-muted small">
+              Order Number: <span id="display-order-id"></span>
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const cartUrl = "{% url 'cart' %}";
+    const url = "{% url 'payments' %}";
+    const redirect_url = "{% url 'order_complete' %}";
+    const csrftoken = "{{ csrf_token }}";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderID = urlParams.get("order_number");
+
+    if (orderID) {
+      document.getElementById("display-order-id").innerText = orderID;
+    }
+
+    function sendPaymentData(paymentStatus) {
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify({
+          orderID: orderID,
+          transID: "DUMMY-" + Math.floor(Math.random() * 1000000),
+          payment_method: "Dummy Payment",
+          status: paymentStatus,
+        }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.json().then((err) => {
+              throw err;
+            });
+          }
+        })
+        .then((data) => {
+          window.location.href =
+            redirect_url +
+            "?order_number=" +
+            orderID +
+            "&payment_id=" +
+            data.transID;
+        })
+        .catch((error) => {
+          console.error("Payment Process Interrupted:", error);
+          alert("Payment Failed");
+          window.location.href = cartUrl + "?payment_failed=true";
+        });
+    }
+
+    // Success
+    const confirmBtn = document.getElementById("confirm-payment-btn");
+    if (confirmBtn) {
+      confirmBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        sendPaymentData("COMPLETED");
+      });
+    }
+
+    // Failure
+    const failedBtn = document.getElementById("payment-failed-btn");
+    if (failedBtn) {
+      failedBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        alert("Payment Failed");
+        sendPaymentData("FAILED");
+      });
+    }
+  });
+</script>
+
+{% endblock %}
