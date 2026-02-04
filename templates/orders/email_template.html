@@ -1,0 +1,190 @@
+{% load static %} {% block content %}
+
+<div
+  style="
+    background-color: #f8f9fa;
+    padding: 20px;
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    color: #333;
+  "
+>
+  <table
+    align="center"
+    border="0"
+    cellpadding="0"
+    cellspacing="0"
+    width="100%"
+    style="
+      max-width: 600px;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    "
+  >
+    <tr>
+      <td align="center" style="padding: 40px 20px 20px 20px">
+        <div style="font-size: 48px; color: #28a745; margin-bottom: 10px">
+          ✔
+        </div>
+        <h2 style="margin: 0; font-size: 24px; color: #333">
+          Order Successful
+        </h2>
+        <p style="color: #666; font-size: 14px">Thank you for your purchase!</p>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding: 0 40px">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="50%" valign="top">
+              <img
+                src="YOUR_DOMAIN_URL{% static '/images/logo.png' %}"
+                alt="Logo"
+                style="max-height: 40px; display: block"
+              />
+            </td>
+            <td
+              width="50%"
+              align="right"
+              style="font-size: 12px; line-height: 18px"
+            >
+              <strong>Invoiced To:</strong><br />
+              {{order.full_name}}<br />
+              {{order.full_address}}<br />
+              {{order.city}}, {{order.state}}<br />
+              {{order.country}}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding: 20px 40px">
+        <div
+          style="
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 13px;
+          "
+        >
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="line-height: 20px">
+                <strong>Order:</strong> #{{order_number}}<br />
+                <strong>Order Date:</strong> {{order.created_at}}<br />
+                <strong>Status:</strong> {{payment.status}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding: 0 40px 20px 40px">
+        <table
+          width="100%"
+          border="0"
+          cellpadding="10"
+          cellspacing="0"
+          style="border-collapse: collapse; font-size: 14px"
+        >
+          <thead>
+            <tr style="border-bottom: 2px solid #eeeeee">
+              <th align="left" style="padding-left: 0">Product</th>
+              <th align="center">Qty</th>
+              <th align="right" style="padding-right: 0">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in ordered_products %}
+            <tr style="border-bottom: 1px solid #eeeeee">
+              <td style="padding-left: 0; vertical-align: top">
+                <strong style="display: block; margin-bottom: 5px"
+                  >{{item.product.product_name}}</strong
+                >
+                {% if item.variations.all %}
+                <span style="font-size: 11px; color: #777; line-height: 14px">
+                  {% for i in item.variations.all %} {{ i.variation_category}}:
+                  {{ i.variation_value}}<br />
+                  {% endfor %}
+                </span>
+                {% endif %}
+              </td>
+              <td align="center">{{item.quantity}}</td>
+              <td align="right" style="padding-right: 0">
+                Rs.{{item.product_price}}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2" align="right" style="padding-top: 20px">
+                Sub Total:
+              </td>
+              <td align="right" style="padding-top: 20px">Rs.{{subtotal}}</td>
+            </tr>
+            <tr>
+              <td colspan="2" align="right">Tax:</td>
+              <td align="right">Rs.{{order.tax}}</td>
+            </tr>
+            <tr>
+              <td
+                colspan="2"
+                align="right"
+                style="font-weight: bold; font-size: 16px"
+              >
+                Grand Total:
+              </td>
+              <td
+                align="right"
+                style="font-weight: bold; font-size: 16px; color: #28a745"
+              >
+                Rs.{{order.order_total}}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td
+        align="center"
+        style="padding: 20px 40px 40px 40px; border-top: 1px solid #eeeeee"
+      >
+        <p
+          style="
+            font-size: 12px;
+            color: #888;
+            line-height: 18px;
+            margin-bottom: 20px;
+          "
+        >
+          We will compute the shipping cost and get back to you in 2 business
+          days with payment gateway details.
+        </p>
+        <a
+          href="YOUR_DOMAIN_URL{% url 'store' %}"
+          style="
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+          "
+          >Shop More</a
+        >
+      </td>
+    </tr>
+  </table>
+</div>
+
+{% endblock %}

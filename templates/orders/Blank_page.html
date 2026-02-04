@@ -6,7 +6,7 @@
       <aside class="col-lg-4">
         <div class="card shadow-sm">
           <div class="card-body text-center">
-            <h4 class="card-title mb-4">Complete Your Action</h4>
+            <h5 class="card-title mb-4">Do you want to Confirm your Order?</h5>
 
             <!-- Success Button -->
             <button
@@ -14,7 +14,7 @@
               id="confirm-payment-btn"
               class="btn btn-primary btn-block mb-3"
             >
-              Payment Successful
+              Yes, I confirm
             </button>
 
             <!-- Failure Button (now with id) -->
@@ -23,7 +23,7 @@
               id="payment-failed-btn"
               class="btn btn-danger btn-block"
             >
-              Payment Failed
+              No
             </a>
 
             <hr />
@@ -89,7 +89,7 @@
         });
     }
 
-    // Success
+    // Yes I confirm
     const confirmBtn = document.getElementById("confirm-payment-btn");
     if (confirmBtn) {
       confirmBtn.addEventListener("click", function (e) {
@@ -98,15 +98,8 @@
       });
     }
 
-    // Failure
+    // No
     const failedBtn = document.getElementById("payment-failed-btn");
-    if (failedBtn) {
-      failedBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        alert("Payment Failed");
-        sendPaymentData("FAILED");
-      });
-    }
   });
 </script>
 

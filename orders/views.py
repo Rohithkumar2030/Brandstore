@@ -9,6 +9,34 @@ from store.models import Product
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
+import smtplib
+from email.message import EmailMessage
+from email.mime.text import MIMEText
+
+def send_email(subject, body, to_email):
+    # Configuration
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+    sender_email = "rohith.allaka@gmail.com"
+    sender_password = "ajih cayp rjuh nzvo"
+
+    msg = EmailMessage()
+    # msg.attach(MIMEText(body, "plain"))
+    msg.set_content(body)
+    msg.add_alternative(body, subtype='html')
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = to_email
+
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Error: {e}")
+
 def payments(request):
     body = json.loads(request.body)
     order = Order.objects.get(user=request.user, order_number=body['orderID'])
@@ -58,14 +86,14 @@ def payments(request):
         CartItem.objects.filter(user=request.user).delete()
 
         # 3. Send email ONLY on success
-        mail_subject = 'Thank you for your order!'
-        message = render_to_string('orders/order_recieved_email.html', {
-            'user': request.user,
-            'order': order,
-        })
-        to_email = request.user.email
-        send_email = EmailMessage(mail_subject, message, to=[to_email])
-        # send_email.send()
+        # message = render_to_string('orders/order_recieved_email.html', {
+        #     'user': request.user,
+        #     'order': order,
+        # })
+        # message = email_template(request)
+        # to_email = request.user.email
+
+        # send_email(mail_subject,message,to_email)
 
         data = {
             'order_number': order.order_number,
@@ -152,7 +180,6 @@ def order_complete(request):
             subtotal += i.product_price * i.quantity
 
         
-
         context = {
             'order': order,
             'ordered_products': ordered_products,
@@ -161,6 +188,10 @@ def order_complete(request):
             'payment': payment,
             'subtotal': subtotal,
         }
+        message = email_template(request)
+        to_email = request.user.email
+        mail_subject = 'Thank you for your order!'
+        send_email(mail_subject,message,to_email)
         return render(request, 'orders/order_complete.html', context)
     except (Payment.DoesNotExist, Order.DoesNotExist):
         return redirect('home')
@@ -174,5 +205,35 @@ def blank_page(request):
         'order_number': order_number,
         'amount': amount,
     }
-    # Make sure 'orders/blank_page.html' exists in your templates folder
+
     return render(request, 'orders/blank_page.html', context)
+
+def email_template(request):
+    order_number = request.GET.get('order_number')
+    transID = request.GET.get('payment_id')
+    
+    try:
+        payment = Payment.objects.get(payment_id=transID)
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+        
+        subtotal = 0
+        for i in ordered_products:
+            subtotal += i.product_price * i.quantity
+
+        context = {
+            'order': order,
+            'ordered_products': ordered_products,
+            'order_number': order.order_number,
+            'transID': payment.payment_id,
+            'payment': payment,
+            'subtotal': subtotal,
+        }
+        
+        html_string = render_to_string('orders/email_template.html', context)
+        
+        return html_string
+
+    except Exception as e:
+        return e
+    

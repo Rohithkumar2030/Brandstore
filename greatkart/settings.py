@@ -1,6 +1,8 @@
 from pathlib import Path
 from decouple import config
 import os
+import ssl
+EMAIL_SSL_CONTEXT = ssl._create_unverified_context()
 
 # Base directories
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -142,8 +144,10 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
 # Email config (optional for local dev — make sure values exist in `.env`)
-EMAIL_HOST = config('EMAIL_HOST', default='localhost')
-EMAIL_PORT = config('EMAIL_PORT', default=1025, cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'rohith.allaka@gmail.com'
+EMAIL_HOST_PASSWORD = 'ajih cayp rjuh nzvo'   
+
