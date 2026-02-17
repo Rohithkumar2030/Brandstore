@@ -102,7 +102,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# ✅ CORRECTED Static files configuration for BOTH root-level AND app-level static folders
+# CORRECTED Static files configuration for BOTH root-level AND app-level static folders
 STATIC_URL = '/static/'
 STATIC_ROOT = '/app/staticfiles'
 
