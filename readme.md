@@ -9,3 +9,9 @@
 #'NAME': '/app/db/db.sqlite3', 
 # Uncomment the above line and comment previous line in production server
 
+
+
+# Uncomment this in ./greatkart/setting.py Production server
+#EMAIL_HOST = '10.3.103.129'
+#EMAIL_PORT = 25
+#EMAIL_USE_TLS = False

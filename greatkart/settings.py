@@ -25,8 +25,6 @@ INSTALLED_APPS = [
     'store',
     'carts',
     'orders',
-    # 'admin_honeypot',
-    # 'storages',  # AWS-only, comment out if not required locally
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -115,14 +113,13 @@ STATICFILES_DIRS = [
     # You can add more directories here if needed
 ]
 
-# Static file finders - CRUCIAL for finding both types of static folders
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',    # ✅ Finds STATICFILES_DIRS
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder', # ✅ Finds app-level static folders
+    'django.contrib.staticfiles.finders.FileSystemFinder',    
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder', 
 ]
 
-# For production - where collectstatic puts all files (must be different from STATICFILES_DIRS)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ Changed to avoid conflict
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
