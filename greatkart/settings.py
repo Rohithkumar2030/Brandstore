@@ -145,6 +145,10 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
 # Email config (optional for local dev — make sure values exist in `.env`)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Uncomment this in Production server
+# EMAIL_HOST = '10.3.103.129'
+# EMAIL_PORT = 25
+# EMAIL_USE_TLS = False
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
