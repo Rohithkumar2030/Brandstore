@@ -8,6 +8,7 @@ from carts.views import _cart_id
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse
 from .forms import ReviewForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from orders.models import OrderProduct
 
@@ -69,6 +70,8 @@ def product_detail(request, category_slug, product_slug):
 
 
 def search(request):
+    products = []
+    product_count = 0
     if 'keyword' in request.GET:
         keyword = request.GET['keyword']
         if keyword:
@@ -81,6 +84,7 @@ def search(request):
     return render(request, 'store/store.html', context)
 
 
+@login_required(login_url='login')
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER')
     if request.method == 'POST':

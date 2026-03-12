@@ -150,11 +150,6 @@ def activate(request, uidb64, token):
         return redirect('register')
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import UserProfile
-from orders.models import Order # Ensure this import is correct
-
 @login_required(login_url='login')
 def dashboard(request):
     try:

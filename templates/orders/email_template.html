@@ -1,5 +1,3 @@
-{% load static %} {% block content %}
-
 <div
   style="
     background-color: #f8f9fa;
@@ -40,7 +38,7 @@
           <tr>
             <td width="50%" valign="top">
               <img
-                src="YOUR_DOMAIN_URL{% static '/images/logo.png' %}"
+                src="https://brandstore.iitkgp.ac.in/static/images/logo.png"
                 alt="Logo"
                 style="max-height: 40px; display: block"
               />
@@ -170,7 +168,7 @@
           days with payment gateway details.
         </p>
         <a
-          href="YOUR_DOMAIN_URL{% url 'store' %}"
+          href="https://brandstore.iitkgp.ac.in/store/"
           style="
             background-color: #28a745;
             color: #ffffff;
@@ -186,5 +184,3 @@
     </tr>
   </table>
 </div>
-
-{% endblock %}

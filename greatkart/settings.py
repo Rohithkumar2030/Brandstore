@@ -1,8 +1,6 @@
 from pathlib import Path
 from decouple import config
 import os
-import ssl
-EMAIL_SSL_CONTEXT = ssl._create_unverified_context()
 
 # Base directories
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +28,10 @@ INSTALLED_APPS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     "https://brandstore.iitkgp.ac.in",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8080",
+    "http://localhost:8000",
+    "http://localhost:8080",
 ]
 
 # Middleware
@@ -43,7 +44,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware'
 ]
 
 # Session timeout settings
@@ -102,15 +102,12 @@ USE_TZ = True
 
 # CORRECTED Static files configuration for BOTH root-level AND app-level static folders
 STATIC_URL = '/static/'
-STATIC_ROOT = '/app/staticfiles'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/app/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# This enables Django to find static files in BOTH locations
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # ✅ Root-level static folder (for global assets)
-    # You can add more directories here if needed
+    os.path.join(BASE_DIR, 'static'),  # Root-level static folder (for global assets)
 ]
 
 STATICFILES_FINDERS = [
@@ -118,26 +115,22 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder', 
 ]
 
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Messages config
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
-# Email config (optional for local dev — make sure values exist in `.env`)
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Email config
+EMAIL_BACKEND = 'greatkart.email_backend.CertifiEmailBackend'
 # Uncomment this in Production server
 # EMAIL_HOST = '10.3.103.129'
 # EMAIL_PORT = 25
 # EMAIL_USE_TLS = False
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'rohith.allaka@gmail.com'
-EMAIL_HOST_PASSWORD = 'ajih cayp rjuh nzvo'   
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

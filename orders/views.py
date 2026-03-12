@@ -6,22 +6,22 @@ import datetime
 from .models import Order, Payment, OrderProduct
 import json
 from store.models import Product
-from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 import smtplib
-from email.message import EmailMessage
-from email.mime.text import MIMEText
+from email.message import EmailMessage as RawEmailMessage
 
 def send_email(subject, body, to_email):
+    from django.conf import settings
     # Configuration
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    sender_email = "rohith.allaka@gmail.com"
-    sender_password = "ajih cayp rjuh nzvo"
+    smtp_server = settings.EMAIL_HOST
+    smtp_port = settings.EMAIL_PORT
+    sender_email = settings.EMAIL_HOST_USER
+    sender_password = settings.EMAIL_HOST_PASSWORD
 
-    msg = EmailMessage()
-    # msg.attach(MIMEText(body, "plain"))
+    msg = RawEmailMessage()
     msg.set_content(body)
     msg.add_alternative(body, subtype='html')
     msg['Subject'] = subject
@@ -35,8 +35,10 @@ def send_email(subject, body, to_email):
             server.send_message(msg)
         print("Email sent successfully!")
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error sending email: {e}")
 
+@require_POST
+@login_required(login_url='login')
 def payments(request):
     body = json.loads(request.body)
     order = Order.objects.get(user=request.user, order_number=body['orderID'])
@@ -86,14 +88,19 @@ def payments(request):
         CartItem.objects.filter(user=request.user).delete()
 
         # 3. Send email ONLY on success
-        # message = render_to_string('orders/order_recieved_email.html', {
-        #     'user': request.user,
-        #     'order': order,
-        # })
-        # message = email_template(request)
-        # to_email = request.user.email
-
-        # send_email(mail_subject,message,to_email)
+        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+        subtotal = sum(i.product_price * i.quantity for i in ordered_products)
+        message = render_to_string('orders/email_template.html', {
+            'order': order,
+            'ordered_products': ordered_products,
+            'order_number': order.order_number,
+            'transID': payment.payment_id,
+            'payment': payment,
+            'subtotal': subtotal,
+        })
+        mail_subject = 'Thank you for your order!'
+        to_email = request.user.email
+        send_email(mail_subject, message, to_email)
 
         data = {
             'order_number': order.order_number,
@@ -106,6 +113,7 @@ def payments(request):
         # This prevents the JS .then() from running and keeps the cart full
         return JsonResponse({'status': 'Failed', 'message': 'Payment was not successful'}, status=400)
     
+@login_required(login_url='login')
 def place_order(request, total=0, quantity=0,):
     current_user = request.user
 
@@ -188,10 +196,6 @@ def order_complete(request):
             'payment': payment,
             'subtotal': subtotal,
         }
-        message = email_template(request)
-        to_email = request.user.email
-        mail_subject = 'Thank you for your order!'
-        send_email(mail_subject,message,to_email)
         return render(request, 'orders/order_complete.html', context)
     except (Payment.DoesNotExist, Order.DoesNotExist):
         return redirect('home')
@@ -232,8 +236,8 @@ def email_template(request):
         
         html_string = render_to_string('orders/email_template.html', context)
         
-        return html_string
+        return HttpResponse(html_string)
 
     except Exception as e:
-        return e
+        return HttpResponse(str(e), status=400)
     
