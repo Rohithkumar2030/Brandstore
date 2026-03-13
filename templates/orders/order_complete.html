@@ -6,6 +6,16 @@
 <div class="container" style="margin-top: 50px;">
     <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
     <h2 class="text-center">Order Successful</h2>
+    {# Render the email send result (True/False) if available #}
+    <h2 class="text-center 
+    {% if email_result == 'Email sent successfully' %}
+        text-success
+    {% elif email_result == 'Failed to send email' %}
+        text-danger
+    {% endif %}
+    ">
+        {{ email_result }}
+    </h2>
 	<br>
 	<div class="text-center">
 		<a href="{% url 'store' %}" class="btn btn-success">Shop more</a>

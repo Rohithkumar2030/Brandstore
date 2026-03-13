@@ -34,8 +34,10 @@ def send_email(subject, body, to_email):
             server.login(sender_email, sender_password)
             server.send_message(msg)
         print("Email sent successfully!")
+        return True
     except Exception as e:
         print(f"Error sending email: {e}")
+        return False
 
 @require_POST
 @login_required(login_url='login')
@@ -100,11 +102,19 @@ def payments(request):
         })
         mail_subject = 'Thank you for your order!'
         to_email = request.user.email
-        send_email(mail_subject, message, to_email)
-
+        # send email and persist the result in the user's session so the
+        # order completion page can show whether the email was sent.
+        result = send_email(mail_subject, message, to_email)
+        try:
+            # store under a key unique to this order number
+            request.session[f'email_sent_{order.order_number}'] = bool(result)
+        except Exception:
+            # don't fail the whole flow if session storage fails
+            pass
+        
         data = {
             'order_number': order.order_number,
-            'transID': payment.payment_id,
+            'transID': payment.payment_id,            
         }
         return JsonResponse(data)
     
@@ -188,6 +198,16 @@ def order_complete(request):
             subtotal += i.product_price * i.quantity
 
         
+        # Read the email send result from session (set by payments()).
+        # Map boolean -> friendly message; if missing, leave as None.
+        email_result = request.session.pop(f'email_sent_{order_number}', None)
+        if email_result is True:
+            email_result = "Email sent successfully"
+        elif email_result is False:
+            email_result = "Failed to send email"
+        else:
+            email_result = None
+
         context = {
             'order': order,
             'ordered_products': ordered_products,
@@ -195,6 +215,7 @@ def order_complete(request):
             'transID': payment.payment_id,
             'payment': payment,
             'subtotal': subtotal,
+            'email_result': email_result,
         }
         return render(request, 'orders/order_complete.html', context)
     except (Payment.DoesNotExist, Order.DoesNotExist):
