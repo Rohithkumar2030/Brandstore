@@ -30,6 +30,7 @@ def send_email(subject, body, to_email):
 
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
+            # Uncomment the below 2 in Production server
             server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(msg)
