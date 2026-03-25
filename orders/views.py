@@ -5,10 +5,11 @@ from .forms import OrderForm
 import datetime
 from .models import Order, Payment, OrderProduct
 import json
-from store.models import Product
+from store.models import Product, ProductVariation
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 import smtplib
 from email.message import EmailMessage as RawEmailMessage
@@ -69,30 +70,24 @@ def payments(request):
             orderproduct.order_id = order.id
             orderproduct.payment = payment
             orderproduct.user_id = request.user.id
-            orderproduct.product_id = item.product_id
+            orderproduct.product_variation_id = item.product_variation_id
             orderproduct.quantity = item.quantity
-            orderproduct.product_price = item.product.price
+            orderproduct.product_price = item.product_variation.product.price
             
             # --- TAX CALCULATION LOGIC ---
             # Calculate CGST and SGST amounts based on the Category rates
             # Amount = (Price * Quantity) * (Percentage / 100)
-            price_for_tax = float(item.product.price) * item.quantity
-            orderproduct.cgst = round(price_for_tax * (float(item.product.category.cgst) / 100), 2)
-            orderproduct.sgst = round(price_for_tax * (float(item.product.category.sgst) / 100), 2)
+            price_for_tax = float(item.product_variation.product.price) * item.quantity
+            orderproduct.cgst = round(price_for_tax * (float(item.product_variation.product.category.cgst) / 100), 2)
+            orderproduct.sgst = round(price_for_tax * (float(item.product_variation.product.category.sgst) / 100), 2)
             # -----------------------------
 
             orderproduct.ordered = True
             orderproduct.save()
 
-            # Set variations
-            product_variation = item.variations.all()
-            orderproduct.variations.set(product_variation)
-            orderproduct.save()
-
             # Reduce the quantity of the sold products
-            product = Product.objects.get(id=item.product_id)
-            product.stock -= item.quantity
-            product.save()
+            item.product_variation.stock -= item.quantity
+            item.product_variation.save()
 
         # 2. Clear cart
         CartItem.objects.filter(user=request.user).delete()
@@ -148,6 +143,7 @@ def place_order(request, total=0, quantity=0):
     current_user = request.user
     cart_items = CartItem.objects.filter(user=current_user)
     if cart_items.count() <= 0:
+        messages.error(request, "Your cart is empty")
         return redirect('store')
 
     total_cgst = 0
@@ -175,44 +171,50 @@ def place_order(request, total=0, quantity=0):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            data = Order()
-            # ... (Your existing field assignments: first_name, last_name, etc.) ...
-            data.user = current_user
-            data.first_name = form.cleaned_data['first_name']
-            data.last_name = form.cleaned_data['last_name']
-            data.phone = form.cleaned_data['phone']
-            data.email = form.cleaned_data['email']
-            data.address_line_1 = form.cleaned_data['address_line_1']
-            data.address_line_2 = form.cleaned_data['address_line_2']
-            data.country = form.cleaned_data['country']
-            data.state = form.cleaned_data['state']
-            data.city = form.cleaned_data['city']
-            data.order_note = form.cleaned_data['order_note']
-            
-            data.order_total = grand_total
-            data.tax = total_tax # Stores total GST
-            data.ip = request.META.get('REMOTE_ADDR')
-            data.save()
+            try:
+                data = Order()
+                # ... (Your existing field assignments: first_name, last_name, etc.) ...
+                data.user = current_user
+                data.first_name = form.cleaned_data['first_name']
+                data.last_name = form.cleaned_data['last_name']
+                data.phone = form.cleaned_data['phone']
+                data.email = form.cleaned_data['email']
+                data.address_line_1 = form.cleaned_data['address_line_1']
+                data.address_line_2 = form.cleaned_data['address_line_2']
+                data.country = form.cleaned_data['country']
+                data.state = form.cleaned_data['state']
+                data.city = form.cleaned_data['city']
+                data.order_note = form.cleaned_data['order_note']
+                
+                data.order_total = grand_total
+                data.tax = total_tax # Stores total GST
+                data.ip = request.META.get('REMOTE_ADDR')
+                data.save()
 
-            # Generate Order Number
-            order_number = datetime.date.today().strftime('%Y%m%d') + str(data.id)
-            data.order_number = order_number
-            data.save()
+                # Generate Order Number
+                order_number = datetime.date.today().strftime('%Y%m%d') + str(data.id)
+                data.order_number = order_number
+                data.save()
 
-            order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
-            context = {
-                'order': order,
-                'cart_items': cart_items,
-                'total': total,
-                'cgst': total_cgst,
-                'sgst': total_sgst,
-                'cgst_percentage': cgst_percentage,
-                'sgst_percentage': sgst_percentage,
-                'tax': total_tax,
-                'grand_total': grand_total,
-            }
-            return render(request, 'orders/payments.html', context)
-    return redirect('checkout')
+                order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+                context = {
+                    'order': order,
+                    'cart_items': cart_items,
+                    'total': total,
+                    'cgst': total_cgst,
+                    'sgst': total_sgst,
+                    'cgst_percentage': cgst_percentage,
+                    'sgst_percentage': sgst_percentage,
+                    'tax': total_tax,
+                    'grand_total': grand_total,
+                }
+                return render(request, 'orders/payments.html', context)
+            except Exception as e:
+                messages.error(request, f"Error processing order: {e}")
+                return redirect('checkout')
+        else:
+            messages.error(request, f"Form validation failed: {form.errors}")
+            return redirect('checkout')
 
 
 def order_complete(request):

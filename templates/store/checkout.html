@@ -8,6 +8,7 @@
 <div class="container">
 
 <!-- ============================ COMPONENT 1 ================================= -->
+{% include 'includes/alerts.html' %}
 
 <div class="row">
 	<aside class="col-lg-6">
@@ -92,11 +93,8 @@
       			<figcaption class="info">
       				<a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
       				<p class="text-muted small">
-      					{% if cart_item.variations.all %}
-      						{% for item in cart_item.variations.all %}
-      							{{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
-      						{% endfor %}
-      					{% endif %}
+      					Color: {{ cart_item.product_variation.color | capfirst }} <br>
+      					Size: {{ cart_item.product_variation.size | capfirst }}
       				</p>
       			</figcaption>
       		</figure>
@@ -113,9 +111,7 @@
       	</td>
 
       </tr>
-      {% endfor %}
-
-      </tbody>
+      {% endfor %}      </tbody>
       </table>
 
       <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>

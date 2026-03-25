@@ -1,51 +1,130 @@
-/* Hide Radio button */
+/* Hide Radio button completely */
 .rate>input {
-  display: none;
+  display: none !important;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .rate {
   display: inline-block;
   border: 0;
+  margin: 10px 0;
+  padding: 0;
+  line-height: 1;
 }
 
 .rate>label {
-  float: right;
-}
-
-/* Showing the stars */
-.rate>label:before {
   display: inline-block;
-  font-size: 1.1rem;
-  font-family: FontAwesome;
-  content: "\f005";
-  margin: 0;
-  padding: 0.3rem .2rem;
   cursor: pointer;
+  margin: 0 2px;
 }
 
-/* Half star */
-.rate .half:before {
-  content: "\f089";
-  position: absolute;
-  padding-right: 0;
+.rate>label i {
+  color: #ddd;
+  font-size: 1.5rem;
+  padding: 0.3rem 0.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  font-weight: 900 !important;
 }
 
-/* Click and hover */
-input:checked~label,
-label:hover~label {
-  color: #ffb503;
+/* Star rating logic - now handled by JavaScript */
+.rate label:hover i {
+  color: #ffb503 !important;
 }
 
-/* hover hightlight */
-input:checked+label:hover,
-input:checked~label:hover,
-input:checked~label:hover~label,
-label:hover~input:checked~label {
-  color: #cc9000;
-}
-
+/* Rating star colors */
 .rating-star i {
   color: #ffb503 !important;
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  font-weight: 900 !important;
+}
+
+/* Ensure FontAwesome stars are visible */
+.rating-star .fas.fa-star,
+.rating-star .fas.fa-star-half-alt,
+.rating-star .far.fa-star {
+  color: #ffb503 !important;
+  font-size: 1.1rem;
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  font-weight: 900 !important;
+}
+
+/* Force FontAwesome to load properly */
+.fas,
+.far {
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+}
+
+.fas {
+  font-weight: 900 !important;
+}
+
+.far {
+  font-weight: 400 !important;
+}
+
+/* Additional FontAwesome fixes */
+.fa,
+.fas,
+.far,
+.fal,
+.fad,
+.fab {
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.fas {
+  font-weight: 900 !important;
+}
+
+.far {
+  font-weight: 400 !important;
+}
+
+.fab {
+  font-weight: 400 !important;
+}
+
+/* Specific star fixes */
+.rate label i.fas.fa-star:before {
+  content: "\f005" !important;
+  font-family: "Font Awesome 5 Free" !important;
+  font-weight: 900 !important;
+}
+
+/* Ensure all star icons use correct FontAwesome */
+.rate label i:before {
+  font-family: "Font Awesome 5 Free" !important;
+  font-weight: 900 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Override any conflicting styles */
+.rate label i {
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  font-weight: 900 !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+}
+
+/* Fix for interactive rating stars - ensure proper FontAwesome display */
+.rate label i.fas {
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  font-weight: 900 !important;
 }
 
 ul.thumb {

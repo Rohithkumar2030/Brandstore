@@ -105,13 +105,10 @@
                 <strong style="display: block; margin-bottom: 5px"
                   >{{item.product.product_name}}</strong
                 >
-                {% if item.variations.all %}
                 <span style="font-size: 11px; color: #777; line-height: 14px">
-                  {% for i in item.variations.all %} {{ i.variation_category}}:
-                  {{ i.variation_value}}<br />
-                  {% endfor %}
+                  Color: {{ item.product_variation.color }}<br />
+                  Size: {{ item.product_variation.size }}
                 </span>
-                {% endif %}
               </td>
               <td align="center">{{item.quantity}}</td>
               <td align="right" style="padding-right: 0">
