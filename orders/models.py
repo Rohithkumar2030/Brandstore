@@ -67,6 +67,8 @@ class OrderProduct(models.Model):
     ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    cgst = models.FloatField(default=0)
+    sgst = models.FloatField(default=0)
 
     def __str__(self):
         return self.product.product_name

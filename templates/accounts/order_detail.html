@@ -77,10 +77,17 @@
                                                 <th class="text-center">Rs.{{subtotal}} USD</th>
                                             </tr>
                                             <tr>
-                                                <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">Rs.{{order.tax}} USD</th>
+                                                <th colspan="2" class="text-right">CGST ({{cgst_percentage|floatformat:1}}%):</th>
+                                                <th class="text-center">Rs.{{cgst}} USD</th>
                                             </tr>
-
+                                            <tr>
+                                                <th colspan="2" class="text-right">SGST ({{sgst_percentage|floatformat:1}}%):</th>
+                                                <th class="text-center">Rs.{{sgst}} USD</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Total Tax:</th>
+                                                <th class="text-center">Rs.{{tax}} USD</th>
+                                            </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
                                                 <th class="text-center">Rs.{{order.order_total}} USD</th>

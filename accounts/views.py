@@ -296,12 +296,32 @@ def order_detail(request, order_id):
     order_detail = OrderProduct.objects.filter(order__order_number=order_id)
     order = Order.objects.get(order_number=order_id)
     subtotal = 0
+    total_cgst = 0
+    total_sgst = 0
     for i in order_detail:
         subtotal += i.product_price * i.quantity
+        total_cgst += i.cgst
+        total_sgst += i.sgst
+
+    # Round the total tax values to 2 decimal places
+    total_cgst = round(total_cgst, 2)
+    total_sgst = round(total_sgst, 2)
+    
+    # Calculate total tax properly
+    total_tax = round(total_cgst + total_sgst, 2)
+
+    # Calculate effective tax percentages
+    cgst_percentage = round((total_cgst / subtotal * 100) if subtotal > 0 else 0, 2)
+    sgst_percentage = round((total_sgst / subtotal * 100) if subtotal > 0 else 0, 2)
 
     context = {
         'order_detail': order_detail,
         'order': order,
         'subtotal': subtotal,
+        'cgst': total_cgst,
+        'sgst': total_sgst,
+        'cgst_percentage': cgst_percentage,
+        'sgst_percentage': sgst_percentage,
+        'tax': total_tax,
     }
     return render(request, 'accounts/order_detail.html', context)

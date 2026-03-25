@@ -128,8 +128,16 @@
               <td align="right" style="padding-top: 20px">Rs.{{subtotal}}</td>
             </tr>
             <tr>
-              <td colspan="2" align="right">Tax:</td>
-              <td align="right">Rs.{{order.tax}}</td>
+              <td colspan="2" align="right">CGST ({{cgst_percentage|floatformat:1}}%):</td>
+              <td align="right">Rs.{{cgst}}</td>
+            </tr>
+            <tr>
+              <td colspan="2" align="right">SGST ({{sgst_percentage|floatformat:1}}%):</td>
+              <td align="right">Rs.{{sgst}}</td>
+            </tr>
+            <tr>
+              <td colspan="2" align="right">Total Tax:</td>
+              <td align="right">Rs.{{tax}}</td>
             </tr>
             <tr>
               <td

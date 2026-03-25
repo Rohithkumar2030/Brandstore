@@ -95,10 +95,17 @@
                                                 <th class="text-center">Rs.{{subtotal}} </th>
                                             </tr>
                                             <tr>
-                                                <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">Rs.{{order.tax}} </th>
+                                                <th colspan="2" class="text-right">CGST ({{cgst_percentage|floatformat:1}}%):</th>
+                                                <th class="text-center">Rs.{{cgst}} </th>
                                             </tr>
-
+                                            <tr>
+                                                <th colspan="2" class="text-right">SGST ({{sgst_percentage|floatformat:1}}%):</th>
+                                                <th class="text-center">Rs.{{sgst}} </th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Total Tax:</th>
+                                                <th class="text-center">Rs.{{tax}} </th>
+                                            </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
                                                 <th class="text-center">Rs.{{order.order_total}} </th>

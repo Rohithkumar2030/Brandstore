@@ -34,13 +34,17 @@
 							<h2 class="title">{{ single_product.product_name }}</h2>
 							<div class="rating-star">
 								<span>
-									<i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-	<span>{{single_product.countReview}} reviews</span>
-									</span>
+									{% for star in "12345" %}
+										{% if single_product.averageReview >= forloop.counter %}
+											<i class="fas fa-star" aria-hidden="true"></i>
+										{% elif single_product.averageReview >= forloop.counter|add:-0.5 %}
+											<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+										{% else %}
+											<i class="far fa-star" aria-hidden="true"></i>
+										{% endif %}
+									{% endfor %}
+									<span>{{single_product.countReview}} reviews</span>
+								</span>
 							</div>
 
 
@@ -148,13 +152,17 @@
 	<h3>Customer Reviews </h3>
 	<div class="rating-star">
 		<span>
-			<i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-			<i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-	<span>{{single_product.countReview}} reviews</span>
-			</span>
+			{% for star in "12345" %}
+				{% if single_product.averageReview >= forloop.counter %}
+					<i class="fas fa-star" aria-hidden="true"></i>
+				{% elif single_product.averageReview >= forloop.counter|add:-0.5 %}
+					<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+				{% else %}
+					<i class="far fa-star" aria-hidden="true"></i>
+				{% endif %}
+			{% endfor %}
+			<span>{{single_product.countReview}} reviews</span>
+		</span>
 	</div>
 
 </header>
@@ -168,11 +176,15 @@
 							<h6 class="mb-1">{{review.user.full_name}} </h6>
 							<div class="rating-star">
 								<span>
-									<i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
-									<i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+									{% for star in "12345" %}
+										{% if review.rating >= forloop.counter %}
+											<i class="fas fa-star" aria-hidden="true"></i>
+										{% elif review.rating >= forloop.counter|add:-0.5 %}
+											<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+										{% else %}
+											<i class="far fa-star" aria-hidden="true"></i>
+										{% endif %}
+									{% endfor %}
 								</span>
 							</div>
 						</div>

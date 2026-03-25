@@ -184,12 +184,16 @@
 				<div class="price mt-1">Rs {{ product.price }}</div> <!-- price-wrap.// -->
 				<div class="rating-star">
 					<span>
-						<i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-						<i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-						</span>
+						{% for star in "12345" %}
+							{% if product.averageReview >= forloop.counter %}
+								<i class="fas fa-star" aria-hidden="true"></i>
+							{% elif product.averageReview >= forloop.counter|add:-0.5 %}
+								<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+							{% else %}
+								<i class="far fa-star" aria-hidden="true"></i>
+							{% endif %}
+						{% endfor %}
+					</span>
 				</div>
 			</figcaption>
 		</div>
