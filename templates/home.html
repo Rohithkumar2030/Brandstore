@@ -205,9 +205,191 @@
 </section>
 <!-- ========================= SECTION  END// ========================= -->
 
+<!-- ========================= TESTIMONIALS SLIDESHOW ========================= -->
+<section class="section-testimonials bg-light padding-y">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center mb-5">
+				<h3 class="section-title">What Our Customers Say</h3>
+			</div>
+		</div>
 
+		<div class="testimonials-slider">
+			<div class="testimonials-container">
+				<!-- Testimonial 1 -->
+				<div class="testimonial-slide active">
+					<div class="testimonial-card">
+						<div class="testimonial-quote-icon">"</div>
+						<p class="testimonial-text">Because of this course I was able to clear my two interviews... Thanks for making such wonderful content.</p>
+						<div class="testimonial-author-row">
+							<div class="testimonial-avatar-circle">DS</div>
+							<div class="testimonial-author-info">
+								<h6 class="testimonial-name">Diksha S</h6>
+							</div>
+						</div>
+					</div>
+				</div>
 
-</body>
-</html>
+				<!-- Testimonial 2 -->
+				<div class="testimonial-slide">
+					<div class="testimonial-card">
+						<div class="testimonial-quote-icon">"</div>
+						<p class="testimonial-text">This has helped me so much in my career...I joined as a frontend engineer and eventually transitioned to full stack engineer with the help of this course.</p>
+						<div class="testimonial-author-row">
+							<div class="testimonial-avatar-circle">CB</div>
+							<div class="testimonial-author-info">
+								<h6 class="testimonial-name">Chethan B</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Testimonial 3 -->
+				<div class="testimonial-slide">
+					<div class="testimonial-card">
+						<div class="testimonial-quote-icon">"</div>
+						<p class="testimonial-text">Today, I am a software developer, and I credit a significant part of my success to the solid foundation laid by this course.</p>
+						<div class="testimonial-author-row">
+							<div class="testimonial-avatar-circle">BK</div>
+							<div class="testimonial-author-info">
+								<h6 class="testimonial-name">Batchu K</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Testimonial 4 -->
+				<div class="testimonial-slide">
+					<div class="testimonial-card">
+						<div class="testimonial-quote-icon">"</div>
+						<p class="testimonial-text">I would highly recommend this Web Development Bootcamp to anyone interested in pursuing a career in web development or looking to enhance their skills in this field.</p>
+						<div class="testimonial-author-row">
+							<div class="testimonial-avatar-circle">AK</div>
+							<div class="testimonial-author-info">
+								<h6 class="testimonial-name">Ankit K</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Testimonial 5 -->
+				<div class="testimonial-slide">
+					<div class="testimonial-card">
+						<div class="testimonial-quote-icon">"</div>
+						<p class="testimonial-text">Outstanding collection of products! The quality exceeds my expectations and the shipping is always on time. My go-to online store now.</p>
+						<div class="testimonial-author-row">
+							<div class="testimonial-avatar-circle">LT</div>
+							<div class="testimonial-author-info">
+								<h6 class="testimonial-name">Lisa Thompson</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Navigation Arrows -->
+			<button class="testimonial-nav testimonial-prev" id="prevBtn">
+				<i class="fas fa-chevron-left"></i>
+			</button>
+			<button class="testimonial-nav testimonial-next" id="nextBtn">
+				<i class="fas fa-chevron-right"></i>
+			</button>
+
+			<!-- Dots Navigation -->
+			<div class="testimonial-dots">
+				<span class="dot active" data-slide="0"></span>
+				<span class="dot" data-slide="1"></span>
+				<span class="dot" data-slide="2"></span>
+				<span class="dot" data-slide="3"></span>
+				<span class="dot" data-slide="4"></span>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- ========================= TESTIMONIALS SLIDESHOW END ========================= -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.testimonial-slide');
+    const dots = document.querySelectorAll('.testimonial-dots .dot');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentSlide = 0;
+    let autoPlayInterval;
+
+    // Function to show specific slide
+    function showSlide(index) {
+        // Hide all slides
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Show current slide
+        if (slides[index]) {
+            slides[index].classList.add('active');
+        }
+        if (dots[index]) {
+            dots[index].classList.add('active');
+        }
+        currentSlide = index;
+    }
+
+    // Next slide function
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    // Previous slide function
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    // Auto-play functionality
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    }
+
+    function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+    }
+
+    // Event listeners for navigation buttons
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+            stopAutoPlay();
+            nextSlide();
+            startAutoPlay();
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+            stopAutoPlay();
+            prevSlide();
+            startAutoPlay();
+        });
+    }
+
+    // Event listeners for dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            stopAutoPlay();
+            showSlide(index);
+            startAutoPlay();
+        });
+    });
+
+    // Pause auto-play on hover
+    const sliderContainer = document.querySelector('.testimonials-slider');
+    if (sliderContainer) {
+        sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+        sliderContainer.addEventListener('mouseleave', startAutoPlay);
+    }
+
+    // Start auto-play
+    startAutoPlay();
+});
+</script>
 
 {% endblock %}
