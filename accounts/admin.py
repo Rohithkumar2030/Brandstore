@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 from .models import Account, UserProfile
 from django.utils.html import format_html
 
@@ -25,3 +26,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(Account, AccountAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
+
+# Hide default Django Group model from admin UI.
+# This does not affect authentication; it only removes Group management from admin.
+admin.site.unregister(Group)

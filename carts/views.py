@@ -3,9 +3,12 @@ from store.models import Product, ProductVariation
 from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 from django.http import HttpResponse
+
+from django.views.decorators.csrf import csrf_exempt
 
 def _cart_id(request):
     cart = request.session.session_key
@@ -14,6 +17,7 @@ def _cart_id(request):
         cart = request.session.session_key
     return cart
 
+@csrf_exempt
 def add_cart(request, product_id):
     current_user = request.user
     product = Product.objects.get(id=product_id) #get the product

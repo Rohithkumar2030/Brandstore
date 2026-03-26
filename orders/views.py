@@ -146,6 +146,11 @@ def place_order(request, total=0, quantity=0):
         messages.error(request, "Your cart is empty")
         return redirect('store')
 
+    for cart_item in cart_items:
+        if cart_item.quantity > cart_item.product_variation.stock:
+            messages.error(request, f"Currently this variation {cart_item.product_variation} is out of stock.")
+            return redirect('cart')
+
     total_cgst = 0
     total_sgst = 0
     grand_total = 0
@@ -325,4 +330,4 @@ def email_template(request):
 
     except Exception as e:
         return HttpResponse(str(e), status=400)
-    
+

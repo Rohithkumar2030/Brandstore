@@ -79,6 +79,7 @@
 								</div>
 							</div>
 							<hr>
+							{% include 'includes/alerts.html' %}
 							{% if single_product.stock <= 0 %}
 							<h5 class="text-danger">Out of Stock</h5>
 							{% else %}
@@ -181,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
 						{% endif %}
 
 					</div>
-{% include 'includes/alerts.html' %}
 				</form>
 <br>
 <header class="section-heading">
