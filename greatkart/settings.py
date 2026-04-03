@@ -107,6 +107,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 STATICFILES_FINDERS = [
@@ -114,7 +115,7 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder', 
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Messages config
 from django.contrib.messages import constants as messages

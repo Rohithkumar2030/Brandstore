@@ -28,11 +28,7 @@ def send_email(subject, body, to_emails):
     msg.add_alternative(body, subtype='html')
     msg['Subject'] = subject
     msg['From'] = sender_email
-    recp_email = [to_email]
-    cc_email = ['foreverkgpian@gmail.com']
-    msg['To'] = ', '.join(recp_email)
-    msg['Cc'] = ', '.join(cc_email)
-    all_recipients = recp_email + cc_email
+    msg['To'] = to_emails
 
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:

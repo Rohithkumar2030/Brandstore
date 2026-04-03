@@ -19,3 +19,5 @@
 # Uncomment this in ./orders/views.py Production server
 #server.starttls()
 #server.login(sender_email, sender_password)
+
+# Create db and media folders in the app directory before compiling
