@@ -82,3 +82,13 @@ class ProductGallery(models.Model):
     class Meta:
         verbose_name = 'productgallery'
         verbose_name_plural = 'product gallery'
+
+
+class Testimonial(models.Model):
+    content = models.TextField(max_length=500, blank=True, null=True)
+    author_name = models.CharField(max_length=100)
+    author_image = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Testimonial by {self.author_name}"

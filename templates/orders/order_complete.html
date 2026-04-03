@@ -34,6 +34,8 @@
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
                             <div class="invoice-logo"><img src="{% static '/images/logo.png' %}" alt="Invoice logo" style="max-height: 40px;"></div>
+                            <div style="font-weight: bold; font-size: 1.5rem;">Brandstore</div>
+                            <div style="font-weight: bold; font-size: 1.5rem;">IIT Kharagpur</div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -54,7 +56,11 @@
                             <div class="invoice-details mt25">
                                 <div class="well">
                                     <ul class="list-unstyled mb0">
-                                        <li><strong>Order</strong> #{{order_number}}</li>
+                                        <strong>Order:</strong> 
+                                        <span style="color: #d9534f; background-color: #f9f2f4; padding: 2px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #d9534f; margin-left: 5px; font-family: monospace;">
+                                            {{ order_number }}
+                                        </span>
+                                        <br />
                                         {% comment %} <li><strong>Transaction ID</strong> {{transID}}</li> {% endcomment %}
                                         <li><strong>Order Date:</strong> {{order.created_at}}</li>
                                         <li><strong>Order Status:</strong> {{payment.status}}</li>
@@ -105,7 +111,7 @@
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">Rs.{{order.order_total}} </th>
+                                                <th class="text-center" style="color: red; font-weight: bold;">Rs.{{order.order_total}}</th>
                                             </tr>
                                         </tfoot>
                                     </table>

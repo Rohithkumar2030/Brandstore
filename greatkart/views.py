@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from store.models import Product, ReviewRating
+from store.models import Product, ReviewRating, Testimonial
 
 
 def home(request):
@@ -11,9 +11,13 @@ def home(request):
         status=True,
     )
 
+    # Get all testimonials
+    testimonials = Testimonial.objects.all()
+
     context = {
         'products': products,
         'reviews': reviews,
+        'testimonials': testimonials,
     }
     return render(request, 'home.html', context)
 

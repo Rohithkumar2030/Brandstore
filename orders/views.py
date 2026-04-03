@@ -10,11 +10,12 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
 
 import smtplib
 from email.message import EmailMessage as RawEmailMessage
 
-def send_email(subject, body, to_email):
+def send_email(subject, body, to_emails):
     from django.conf import settings
     # Configuration
     smtp_server = settings.EMAIL_HOST
@@ -27,11 +28,15 @@ def send_email(subject, body, to_email):
     msg.add_alternative(body, subtype='html')
     msg['Subject'] = subject
     msg['From'] = sender_email
-    msg['To'] = to_email
+    recp_email = [to_email]
+    cc_email = ['foreverkgpian@gmail.com']
+    msg['To'] = ', '.join(recp_email)
+    msg['Cc'] = ', '.join(cc_email)
+    all_recipients = recp_email + cc_email
 
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
-            # Uncomment the below 2 in Production server
+            # comment the below 2 in Production server
             server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(msg)
@@ -113,6 +118,7 @@ def payments(request):
             'order_number': order.order_number,
             'transID': payment.payment_id,
             'payment': payment,
+
             'subtotal': subtotal,
             'cgst': total_cgst,
             'sgst': total_sgst,
@@ -120,10 +126,12 @@ def payments(request):
             'sgst_percentage': sgst_percentage,
             'tax': total_tax,
         })
-        
         mail_subject = 'Thank you for your order!'
-        to_email = request.user.email
-        result = send_email(mail_subject, message, to_email)
+
+        admin_email_str = settings.ADMIN_EMAILS
+        admin_emails = [email.strip() for email in admin_email_str.split(',') if email.strip()]
+        to_emails = [request.user.email] + admin_emails
+        result = send_email(mail_subject, message, to_emails)
         
         try:
             request.session[f'email_sent_{order.order_number}'] = bool(result)
