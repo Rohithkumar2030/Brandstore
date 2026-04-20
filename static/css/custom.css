@@ -37,19 +37,45 @@
 
 /* Rating star colors */
 .rating-star i {
+  color: #ddd !important;
+  font-family: "Font Awesome 5 Free", "FontAwesome" !important;
+  font-size: 1.1rem;
+}
+
+/* Filled / half-filled stars */
+.rating-star .fas.fa-star,
+.rating-star .fas.fa-star-half-alt {
   color: #ffb503 !important;
   font-family: "Font Awesome 5 Free", "FontAwesome" !important;
   font-weight: 900 !important;
 }
 
-/* Ensure FontAwesome stars are visible */
-.rating-star .fas.fa-star,
-.rating-star .fas.fa-star-half-alt,
+/* Empty stars must stay outlined */
 .rating-star .far.fa-star {
-  color: #ffb503 !important;
-  font-size: 1.1rem;
+  color: #ddd !important;
   font-family: "Font Awesome 5 Free", "FontAwesome" !important;
-  font-weight: 900 !important;
+  font-weight: 400 !important;
+}
+
+/* Template-rendered stars (independent of icon font versions) */
+.rating-star .star {
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-right: 1px;
+}
+
+.rating-star .star.filled {
+  color: #ffb503;
+}
+
+.rating-star .star.half {
+  color: #ffb503;
+  opacity: 0.6;
+}
+
+.rating-star .star.empty {
+  color: #ddd;
 }
 
 /* Force FontAwesome to load properly */
@@ -456,4 +482,3 @@ ul.thumb li img {
     right: -35px;
   }
 }
-

@@ -3,7 +3,7 @@ boto3                   # Use latest (pin it if you have stability needs)[9][10]
 botocore                # Use latest
 certifi                 # Use latest[11]
 chardet                 # Use latest[12]
-Django>=4.2             # 4.2 LTS+ for Python 3.13[4][21]
+Django>=5.2.8,<7.0      # Python 3.14-safe; avoids known admin template crash on older Django builds
 django-admin-honeypot   # Use latest (1.1.0 likely incompatible)[14]
 django-admin-thumbnails # Use latest[15]
 django-session-timeout  # Use latest

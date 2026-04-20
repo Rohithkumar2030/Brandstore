@@ -36,11 +36,11 @@
 								<span>
 									{% for star in "12345" %}
 										{% if single_product.averageReview >= forloop.counter %}
-											<i class="fas fa-star" aria-hidden="true"></i>
+											<span class="star filled" aria-hidden="true">★</span>
 										{% elif single_product.averageReview >= forloop.counter|add:-0.5 %}
-											<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+											<span class="star half" aria-hidden="true">★</span>
 										{% else %}
-											<i class="far fa-star" aria-hidden="true"></i>
+											<span class="star empty" aria-hidden="true">☆</span>
 										{% endif %}
 									{% endfor %}
 									<span>{{single_product.countReview}} reviews</span>
@@ -190,11 +190,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		<span>
 			{% for star in "12345" %}
 				{% if single_product.averageReview >= forloop.counter %}
-					<i class="fas fa-star" aria-hidden="true"></i>
+					<span class="star filled" aria-hidden="true">★</span>
 				{% elif single_product.averageReview >= forloop.counter|add:-0.5 %}
-					<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+					<span class="star half" aria-hidden="true">★</span>
 				{% else %}
-					<i class="far fa-star" aria-hidden="true"></i>
+					<span class="star empty" aria-hidden="true">☆</span>
 				{% endif %}
 			{% endfor %}
 			<span>{{single_product.countReview}} reviews</span>
@@ -214,11 +214,11 @@ document.addEventListener('DOMContentLoaded', function() {
 								<span>
 									{% for star in "12345" %}
 										{% if review.rating >= forloop.counter %}
-											<i class="fas fa-star" aria-hidden="true"></i>
+											<span class="star filled" aria-hidden="true">★</span>
 										{% elif review.rating >= forloop.counter|add:-0.5 %}
-											<i class="fas fa-star-half-alt" aria-hidden="true"></i>
+											<span class="star half" aria-hidden="true">★</span>
 										{% else %}
-											<i class="far fa-star" aria-hidden="true"></i>
+											<span class="star empty" aria-hidden="true">☆</span>
 										{% endif %}
 									{% endfor %}
 								</span>
