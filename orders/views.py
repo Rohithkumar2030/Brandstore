@@ -68,7 +68,7 @@ def payments(request):
 
         for item in cart_items:
             orderproduct = OrderProduct()
-            orderproduct.order_id = order.id
+            orderproduct.order = order
             orderproduct.payment = payment
             orderproduct.user_id = request.user.id
             orderproduct.product_variation_id = item.product_variation_id
@@ -94,7 +94,7 @@ def payments(request):
         CartItem.objects.filter(user=request.user).delete()
 
         # 3. Send email
-        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+        ordered_products = OrderProduct.objects.filter(order=order)
         subtotal = sum(i.product_price * i.quantity for i in ordered_products)
         
         # Calculate total tax breakdown for the email template
@@ -237,7 +237,7 @@ def order_complete(request):
 
     try:
         order = Order.objects.get(order_number=order_number, is_ordered=True)
-        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+        ordered_products = OrderProduct.objects.filter(order=order)
 
         subtotal = 0
         for i in ordered_products:
@@ -309,7 +309,7 @@ def email_template(request):
     try:
         payment = Payment.objects.get(payment_id=transID)
         order = Order.objects.get(order_number=order_number, is_ordered=True)
-        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+        ordered_products = OrderProduct.objects.filter(order=order)
         
         subtotal = 0
         total_cgst = 0
