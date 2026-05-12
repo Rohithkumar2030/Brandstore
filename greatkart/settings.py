@@ -106,15 +106,16 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/media')
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',    
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder', 
-]
-
+# Collected static files output (do not point to STATICFILES_DIRS)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Messages config
@@ -133,5 +134,5 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-ADMIN_EMAILS = config('ADMIN_EMAILS', default='') 
+ADMIN_EMAILS = config('ADMIN_EMAILS', default='')
 
